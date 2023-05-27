@@ -1,6 +1,10 @@
 from key import API_KEY
 import requests
 import json
+import smtplib
+import email.message
+
+# 1. INTEGRAÇÃO CHATGPT COM PYTHON - REST API OPENAI #
 
 # DICIONÁRIO DE HEADERS #
 headers = {"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"}
@@ -36,3 +40,29 @@ print(requisicaoPost.text)
 response = requisicaoPost.json()
 response_msg = response["choices"][0]["message"]["content"]
 print(response_msg)
+
+
+# 2. ENVIO DE E-MAIL AUTOMÁTICO #
+
+def enviar_email():
+    body_email = response_msg
+
+    msg = email.message.Message()
+    msg['Subject'] = "Resposta para a sua pergunta via Plataforma:"
+    # Substituir pelo e-mail da empresa #
+    msg['From'] = "andre.melo9715@gmail.com"
+    # Substituir pelo e-mail do usuário #
+    msg['To'] = "andre.melo9715@gmail.com"
+    password = 'senha'
+    msg.add_header('Content-Type', 'text/html')
+    msg.set_payload(body_email)
+
+    s = smtplib.SMTP('smtp.gmail.com: 587') ## SMTP padrão GMAIL
+    s.starttls()
+    # Credenciais #
+    s.login(msg['From'], password)
+    s.sendmail(msg['From'], msg['To'], msg.as_string().encode('utf-8'))
+
+    """ TESTE ENVIO
+    print('Email enviado com sucesso!')
+    """
